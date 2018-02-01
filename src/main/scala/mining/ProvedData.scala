@@ -1,4 +1,4 @@
-package task1
+package mining
 
 import com.google.common.primitives.Ints
 import scorex.core.serialization.{BytesSerializable, Serializer}
