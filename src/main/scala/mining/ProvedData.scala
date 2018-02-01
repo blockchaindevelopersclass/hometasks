@@ -12,7 +12,7 @@ case class ProvedData(data: Array[Byte], nonce: Int) extends BytesSerializable {
 }
 
 object ProvedDataSerializer extends Serializer[ProvedData] {
-  override def toBytes(obj: ProvedData): Array[Byte] = Ints.toByteArray(obj.nonce) ++ obj.bytes
+  override def toBytes(obj: ProvedData): Array[Byte] = Ints.toByteArray(obj.nonce) ++ obj.data
 
   override def parseBytes(bytes: Array[Byte]): Try[ProvedData] = Try {
     ProvedData(bytes.drop(4), Ints.fromByteArray(bytes.take(4)))
