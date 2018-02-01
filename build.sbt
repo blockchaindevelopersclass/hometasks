@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
   ("org.scorexfoundation" %% "scorex-core" % scorexVersion).exclude("ch.qos.logback", "logback-classic"),
   "org.scorexfoundation" %% "scorex-testkit" % scorexVersion % "test",
   "org.scalactic" %% "scalactic" % "3.0.+" % "test",
-  "org.scalatest" %% "scalatest" % "3.0.+" % "test,it",
+  "org.scalatest" %% "scalatest" % "3.0.+" % "test",
   "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
 )
 
