@@ -3,7 +3,7 @@ import sbt._
 
 organization := "com.binarydistrict"
 
-name := "blockchain developers"
+name := "hometasks"
 
 version := "0.1.0"
 
