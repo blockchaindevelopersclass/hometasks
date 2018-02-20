@@ -18,7 +18,7 @@ case class Sha256Preimage(preimage: Digest32Preimage) extends Secret {
 }
 
 object Sha256PreimageCompanion extends SecretCompanion[Sha256Preimage] {
-  override type PR = Sha256Preimage
+  override type PR = Sha256PreimageProof
 
   override def owns(secret: Sha256Preimage, box: Box[_]): Boolean = box.proposition match {
     case p: Sha256PreimageProposition => p.hash sameElements secret.publicImage
@@ -27,7 +27,7 @@ object Sha256PreimageCompanion extends SecretCompanion[Sha256Preimage] {
 
   override def sign(secret: Sha256Preimage, message: Array[Byte]): Sha256Preimage = ???
 
-  override def verify(message: Array[Byte], publicImage: Digest32, proof: Sha256Preimage): Boolean = ???
+  override def verify(message: Array[Byte], publicImage: Digest32, proof: Sha256PreimageProof): Boolean = ???
 
   override def generateKeys(randomSeed: Array[Byte]): (Sha256Preimage, Digest32) = ???
 }
