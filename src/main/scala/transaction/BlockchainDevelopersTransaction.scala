@@ -7,7 +7,7 @@ import scorex.core.transaction.Transaction
 import scala.util.Try
 
 case class BlockchainDevelopersTransaction(inputs: IndexedSeq[OutputId],
-                                           to: IndexedSeq[(Sha256PreimageProof, Value)],
+                                           outputs: IndexedSeq[(Sha256PreimageProposition, Value)],
                                            signatures: IndexedSeq[Sha256PreimageProof]
                         ) extends Transaction[Sha256PreimageProposition] {
   override type M = BlockchainDevelopersTransaction
