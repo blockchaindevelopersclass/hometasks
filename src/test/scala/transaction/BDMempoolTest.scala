@@ -14,7 +14,7 @@ class BDMempoolTest extends PropSpec
   with MempoolTransactionsTest[Sha256PreimageProposition, BlockchainDevelopersTransaction, BlockchainDevelopersMempool]
 {
 
-  override val memPool: BlockchainDevelopersMempool = _
-  override val transactionGenerator: Gen[BlockchainDevelopersTransaction] = _
+  override val memPool: BlockchainDevelopersMempool = ???
+  override val transactionGenerator: Gen[BlockchainDevelopersTransaction] = ???
 
 }
