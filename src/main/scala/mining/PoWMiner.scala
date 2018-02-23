@@ -18,7 +18,9 @@ class PoWMiner[HF <: CryptographicHash32](hashFunction: HF) {
     loop(0)
   }
 
-  def validateWork(data: ProvedData, difficulty: BigInt): Boolean =
-    BigInt(1, hashFunction.hash(data.bytes)) <= (MaxTarget / difficulty)
+  def validateWork(data: ProvedData, difficulty: BigInt): Boolean = realDifficulty(data) >= difficulty
+
+  private def realDifficulty(noncedData: ProvedData): BigInt =
+    MaxTarget / BigInt(1, hashFunction.hash(noncedData.bytes))
 
 }
