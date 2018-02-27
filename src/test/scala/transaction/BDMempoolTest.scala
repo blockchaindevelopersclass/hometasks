@@ -154,4 +154,14 @@ class BDMempoolTest extends PropSpec
     }
   }
 
+  property("mempool should not add invalid transactions") {
+    var pool = memPool
+    val initialSize = pool.size
+    forAll(transactionGenerator) { validTx =>
+      val tx = validTx.copy(signatures = validTx.signatures.tail)
+      pool.put(tx).isSuccess shouldBe false
+      pool.size shouldBe initialSize
+    }
+  }
+
 }

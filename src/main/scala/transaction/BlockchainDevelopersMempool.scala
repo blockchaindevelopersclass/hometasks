@@ -11,6 +11,7 @@ class BlockchainDevelopersMempool(poolTxs: Seq[BlockchainDevelopersTransaction] 
   override def put(tx: BlockchainDevelopersTransaction): Try[BlockchainDevelopersMempool] = put(Seq(tx))
 
   override def put(txs: Iterable[BlockchainDevelopersTransaction]): Try[BlockchainDevelopersMempool] = Try {
+    txs.foreach(tx => require(tx.inputs.length == tx.signatures.length))
     putWithoutCheck(txs)
   }
 
@@ -41,5 +42,5 @@ class BlockchainDevelopersMempool(poolTxs: Seq[BlockchainDevelopersTransaction] 
 }
 
 object BlockchainDevelopersMempool {
-  val Limit = 1000
+  val Limit = 50
 }
