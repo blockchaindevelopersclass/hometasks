@@ -3,7 +3,7 @@ package transaction
 import scorex.core.serialization.Serializer
 import scorex.core.transaction.proof.ProofOfKnowledge
 
-import scala.util.Try
+import scala.util.{Success, Try}
 
 case class Sha256PreimageProof(preimage: Digest32Preimage) extends ProofOfKnowledge[Sha256Preimage, Sha256PreimageProposition]{
   override type M = Sha256PreimageProof
@@ -14,8 +14,9 @@ case class Sha256PreimageProof(preimage: Digest32Preimage) extends ProofOfKnowle
 }
 
 object Sha256PreimageProofSerializer extends Serializer[Sha256PreimageProof] {
-  override def toBytes(obj: Sha256PreimageProof): Array[Byte] = ???
+  override def toBytes(obj: Sha256PreimageProof): Array[Byte] = obj.preimage
 
-  override def parseBytes(bytes: Array[Byte]): Try[Sha256PreimageProof] = ???
+  override def parseBytes(bytes: Array[Byte]): Try[Sha256PreimageProof] =
+    Success(Sha256PreimageProof(Digest32Preimage @@ bytes))
 }
 
