@@ -1,5 +1,0 @@
-package transaction
-
-class BDBlockchain {
-
-}

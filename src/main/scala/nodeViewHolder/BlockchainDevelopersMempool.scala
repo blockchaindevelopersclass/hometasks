@@ -1,7 +1,8 @@
-package transaction
+package nodeViewHolder
 
 import scorex.core.ModifierId
 import scorex.core.transaction.MemoryPool
+import transaction.BlockchainDevelopersTransaction
 
 import scala.util.Try
 
