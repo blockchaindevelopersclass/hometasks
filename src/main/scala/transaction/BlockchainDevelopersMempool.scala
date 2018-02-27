@@ -15,7 +15,7 @@ class BlockchainDevelopersMempool(poolTxs: Seq[BlockchainDevelopersTransaction] 
   }
 
   override def putWithoutCheck(txs: Iterable[BlockchainDevelopersTransaction]): BlockchainDevelopersMempool = {
-    val newTransactions = txs.filter(tx => !poolTxs.contains(tx))
+    val newTransactions = txs.filter(tx => !poolTxs.contains(tx)).take(BlockchainDevelopersMempool.Limit - poolTxs.size)
     new BlockchainDevelopersMempool(poolTxs ++ newTransactions)
   }
 
@@ -38,4 +38,8 @@ class BlockchainDevelopersMempool(poolTxs: Seq[BlockchainDevelopersTransaction] 
   override def take(limit: Int): Iterable[BlockchainDevelopersTransaction] = poolTxs.take(limit)
 
   override type NVCT = BlockchainDevelopersMempool
+}
+
+object BlockchainDevelopersMempool {
+  val Limit = 1000
 }

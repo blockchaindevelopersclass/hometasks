@@ -4,7 +4,6 @@ import org.scalacheck.Gen
 import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
 import org.scalatest.{Matchers, PropSpec}
 import scorex.core.ModifierId
-import scorex.crypto.hash.Digest32
 import scorex.testkit.generators.CoreGenerators
 import scorex.testkit.properties.mempool.MempoolTransactionsTest
 
@@ -140,4 +139,19 @@ class BDMempoolTest extends PropSpec
       }
     }
   }
+
+  property("mempool size should be limited") {
+    val txs: Seq[BlockchainDevelopersTransaction] = (0 until BlockchainDevelopersMempool.Limit)
+      .map(_ => transactionGenerator.sample.get)
+    var pool: BlockchainDevelopersMempool = txs.foldLeft(memPool) { (currentPool, tx) =>
+      currentPool.put(tx).get
+    }
+    pool.size shouldBe BlockchainDevelopersMempool.Limit
+
+    forAll(transactionGenerator) { tx =>
+      pool = pool.put(tx).get
+      pool.size shouldBe BlockchainDevelopersMempool.Limit
+    }
+  }
+
 }
