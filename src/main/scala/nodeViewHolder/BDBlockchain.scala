@@ -82,11 +82,9 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
 
 object BDBlockchain {
 
-  val MaxTarget: BigInt = BigInt(1, Array.fill(32)((-1).toByte))
-
   val GenesisBlock: BDBlock = BDBlock(Seq.empty,
     ModifierId @@ Array.fill(32)(0: Byte),
-    MaxTarget,
+    BDMiner.MaxTarget,
     0,
     0: Byte,
     1517329800000L)
