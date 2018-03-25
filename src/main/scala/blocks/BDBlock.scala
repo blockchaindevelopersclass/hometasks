@@ -6,16 +6,16 @@ import scorex.core.block.Block.Version
 import scorex.core.serialization.Serializer
 import scorex.core.{ModifierId, ModifierTypeId}
 import scorex.crypto.hash.Digest32
-import transaction.{BlockchainDevelopersTransaction, Sha256PreimageProposition}
+import transaction.{BDTransaction, Sha256PreimageProposition}
 
 import scala.util.Try
 
-case class BDBlock(transactions: Seq[BlockchainDevelopersTransaction],
+case class BDBlock(transactions: Seq[BDTransaction],
                    parentId: ModifierId,
                    currentTarget: BigInt,
                    nonce: Long,
                    version: Version,
-                   timestamp: Long) extends Block[Sha256PreimageProposition, BlockchainDevelopersTransaction] {
+                   timestamp: Long) extends Block[Sha256PreimageProposition, BDTransaction] {
   override type M = BDBlock
 
   override val modifierTypeId: ModifierTypeId = ModifierTypeId @@ 2.toByte

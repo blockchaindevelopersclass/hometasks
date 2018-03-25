@@ -5,15 +5,15 @@ import scorex.core.consensus.History.ModifierIds
 import scorex.core.consensus.SyncInfo
 import scorex.core.serialization.Serializer
 
-case class DBSyncInfo(ids: Seq[ModifierId])  extends SyncInfo {
-  override type M = DBSyncInfo
+case class BDSyncInfo(ids: Seq[ModifierId])  extends SyncInfo {
+  override type M = BDSyncInfo
 
   override def startingPoints: ModifierIds = ???
 
-  override def serializer: Serializer[DBSyncInfo.this.type] = ???
+  override def serializer: Serializer[BDSyncInfo.this.type] = ???
 }
 
 
-object DBSyncInfo {
+object BDSyncInfo {
   val idsSize = 100
 }

@@ -11,11 +11,11 @@ import supertagged.untag
 
 import scala.util.Try
 
-case class BlockchainDevelopersTransaction(inputs: IndexedSeq[OutputId],
-                                           outputs: IndexedSeq[(Sha256PreimageProposition, Value)],
-                                           signatures: IndexedSeq[Sha256PreimageProof]
+case class BDTransaction(inputs: IndexedSeq[OutputId],
+                         outputs: IndexedSeq[(Sha256PreimageProposition, Value)],
+                         signatures: IndexedSeq[Sha256PreimageProof]
                                           ) extends Transaction[Sha256PreimageProposition] {
-  override type M = BlockchainDevelopersTransaction
+  override type M = BDTransaction
 
   private def seqToBytes[A](sequence: IndexedSeq[A], mapping: A => Array[Byte]): Array[Byte] =
     if (sequence.nonEmpty) concatBytes(sequence.map(mapping)) else Array[Byte]()
@@ -32,13 +32,13 @@ case class BlockchainDevelopersTransaction(inputs: IndexedSeq[OutputId],
       s => s.serializer.toBytes(s))
   )
 
-  override def serializer: Serializer[BlockchainDevelopersTransaction] = BCTransactionSerializer
+  override def serializer: Serializer[BDTransaction] = BCTransactionSerializer
 
   override def json: Json = ???
 }
 
-object BCTransactionSerializer extends Serializer[BlockchainDevelopersTransaction] {
-  override def toBytes(obj: BlockchainDevelopersTransaction): Array[Byte] = {
+object BCTransactionSerializer extends Serializer[BDTransaction] {
+  override def toBytes(obj: BDTransaction): Array[Byte] = {
     val packer = MessagePack.newDefaultBufferPacker()
     packer.packArrayHeader(obj.inputs.size)
     for {
@@ -65,7 +65,7 @@ object BCTransactionSerializer extends Serializer[BlockchainDevelopersTransactio
     packer.toByteArray
   }
 
-  override def parseBytes(bytes: Array[Byte]): Try[BlockchainDevelopersTransaction] = Try {
+  override def parseBytes(bytes: Array[Byte]): Try[BDTransaction] = Try {
     val unpacker = MessagePack.newDefaultUnpacker(bytes)
     val numInputs = unpacker.unpackArrayHeader()
     val inputs = for {
@@ -91,6 +91,6 @@ object BCTransactionSerializer extends Serializer[BlockchainDevelopersTransactio
       val binaryLen = unpacker.unpackBinaryHeader()
       Sha256PreimageProof(Digest32Preimage @@ unpacker.readPayload(binaryLen))
     }
-    BlockchainDevelopersTransaction(inputs, outputs, transactions)
+    BDTransaction(inputs, outputs, transactions)
   }
 }

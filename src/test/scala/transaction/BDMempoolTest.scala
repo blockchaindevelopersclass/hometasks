@@ -13,12 +13,12 @@ class BDMempoolTest extends PropSpec
   with GeneratorDrivenPropertyChecks
   with Matchers
   with CoreGenerators
-  with MempoolTransactionsTest[Sha256PreimageProposition, BlockchainDevelopersTransaction, BlockchainDevelopersMempool]
+  with MempoolTransactionsTest[Sha256PreimageProposition, BDTransaction, BlockchainDevelopersMempool]
   with Generators {
 
   override val memPool: BlockchainDevelopersMempool = new BlockchainDevelopersMempool
 
-  override val transactionGenerator: Gen[BlockchainDevelopersTransaction] = BDTransactionGenerator
+  override val transactionGenerator: Gen[BDTransaction] = BDTransactionGenerator
 
   property("size of mempool should increase when adding a single tx") {
     forAll(transactionGenerator) { tx =>
@@ -31,7 +31,7 @@ class BDMempoolTest extends PropSpec
   property("size of mempool should increase when adding a collection of txs") {
     forAll(transactionGenerator, transactionGenerator) { (tx1, tx2) =>
       whenever(!(tx1.id sameElements tx2.id)) {
-        val mp = memPool.put(Array[BlockchainDevelopersTransaction](tx1, tx2))
+        val mp = memPool.put(Array[BDTransaction](tx1, tx2))
         mp.isSuccess shouldBe true
         mp.get.size shouldEqual 2
       }
@@ -42,7 +42,7 @@ class BDMempoolTest extends PropSpec
     forAll(transactionGenerator) { tx =>
       var mp = memPool.put(tx)
       mp.isSuccess shouldBe true
-      var mp2 = mp.get.putWithoutCheck(Array[BlockchainDevelopersTransaction](tx, tx))
+      var mp2 = mp.get.putWithoutCheck(Array[BDTransaction](tx, tx))
       mp2.size shouldBe 1
     }
   }
@@ -70,7 +70,7 @@ class BDMempoolTest extends PropSpec
   property("mempool txs should be filtered") {
     forAll(transactionGenerator, transactionGenerator) { (tx1, tx2) =>
       whenever(!(tx1.id sameElements tx2.id)) {
-        val mp = memPool.put(Array[BlockchainDevelopersTransaction](tx1, tx2))
+        val mp = memPool.put(Array[BDTransaction](tx1, tx2))
         mp.isSuccess shouldBe true
         val mp2 = mp.get.filter(tx => tx.id equals tx1.id)
         mp2.size shouldBe 1
@@ -119,8 +119,8 @@ class BDMempoolTest extends PropSpec
   property("existing txs should be obtained by getAll") {
     forAll(transactionGenerator, transactionGenerator, transactionGenerator) { (tx1, tx2, tx3) =>
       whenever(!(tx1.id sameElements tx2.id) && !(tx1.id sameElements tx3.id) && !(tx3.id sameElements tx2.id)) {
-        val allTxs = Array[BlockchainDevelopersTransaction](tx1, tx2, tx3)
-        val selectedTxs = Array[BlockchainDevelopersTransaction](tx1, tx2)
+        val allTxs = Array[BDTransaction](tx1, tx2, tx3)
+        val selectedTxs = Array[BDTransaction](tx1, tx2)
         val selectedIds = Array[ModifierId](tx1.id, tx2.id)
         val mp = memPool.put(allTxs)
         mp.isSuccess shouldBe true
@@ -132,7 +132,7 @@ class BDMempoolTest extends PropSpec
   property("required number of txs should be taken") {
     forAll(transactionGenerator, transactionGenerator, transactionGenerator) { (tx1, tx2, tx3) =>
       whenever(!(tx1.id sameElements tx2.id) && !(tx1.id sameElements tx3.id) && !(tx3.id sameElements tx2.id)) {
-        val allTxs = Array[BlockchainDevelopersTransaction](tx1, tx2, tx3)
+        val allTxs = Array[BDTransaction](tx1, tx2, tx3)
         val mp = memPool.put(allTxs)
         mp.isSuccess shouldBe true
         mp.get.take(2).size shouldBe 2
@@ -142,7 +142,7 @@ class BDMempoolTest extends PropSpec
   }
 
   property("mempool size should be limited") {
-    val txs: Seq[BlockchainDevelopersTransaction] = (0 until BlockchainDevelopersMempool.Limit)
+    val txs: Seq[BDTransaction] = (0 until BlockchainDevelopersMempool.Limit)
       .map(_ => transactionGenerator.sample.get)
     var pool: BlockchainDevelopersMempool = txs.foldLeft(memPool) { (currentPool, tx) =>
       currentPool.put(tx).get

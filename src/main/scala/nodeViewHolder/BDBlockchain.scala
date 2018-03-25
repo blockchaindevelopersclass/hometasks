@@ -7,13 +7,13 @@ import scorex.core.consensus.BlockChain.Score
 import scorex.core.consensus.History.ProgressInfo
 import scorex.core.consensus.{BlockChain, History, ModifierSemanticValidity}
 import scorex.crypto.encode.Base58
-import transaction.{BlockchainDevelopersTransaction, Sha256PreimageProposition}
+import transaction.{BDTransaction, Sha256PreimageProposition}
 
 import scala.util.Try
 
 case class BDBlockchain(blocks: Map[Int, BDBlock],
                         reverseMap: Map[String, Int])
-  extends BlockChain[Sha256PreimageProposition, BlockchainDevelopersTransaction, BDBlock, DBSyncInfo, BDBlockchain] {
+  extends BlockChain[Sha256PreimageProposition, BDTransaction, BDBlock, BDSyncInfo, BDBlockchain] {
 
   private def key(id: Array[Byte]): String = Base58.encode(id)
 
@@ -53,12 +53,12 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
     case _ => ModifierSemanticValidity.Unknown
   }
 
-  override def syncInfo: DBSyncInfo = {
-    DBSyncInfo(lastBlockIds(DBSyncInfo.idsSize))
+  override def syncInfo: BDSyncInfo = {
+    BDSyncInfo(lastBlockIds(BDSyncInfo.idsSize))
   }
 
-  override def compare(other: DBSyncInfo): History.HistoryComparisonResult.Value = {
-    val ourIds = lastBlockIds(DBSyncInfo.idsSize)
+  override def compare(other: BDSyncInfo): History.HistoryComparisonResult.Value = {
+    val ourIds = lastBlockIds(BDSyncInfo.idsSize)
     val theirIds = other.ids
     ourIds.reverse.find(id => theirIds.exists(_ sameElements id)) match {
       case Some(common) =>

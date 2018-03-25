@@ -17,11 +17,11 @@ trait Generators extends CoreGenerators {
     value <- positiveLongGen
   } yield p -> Value @@ value
 
-  val BDTransactionGenerator: Gen[BlockchainDevelopersTransaction] = for {
+  val BDTransactionGenerator: Gen[BDTransaction] = for {
     inputs <- Gen.nonEmptyListOf(genBytesList(32)).map(b => OutputId @@ b)
     outputs <- Gen.nonEmptyListOf(outputGen)
     signatures <- Gen.listOfN(inputs.length, preimageProofGenerator)
-  } yield BlockchainDevelopersTransaction(inputs.toIndexedSeq, outputs.toIndexedSeq, signatures.toIndexedSeq)
+  } yield BDTransaction(inputs.toIndexedSeq, outputs.toIndexedSeq, signatures.toIndexedSeq)
 
 
 }
