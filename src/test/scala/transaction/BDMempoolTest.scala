@@ -1,6 +1,6 @@
 package transaction
 
-import nodeViewHolder.BlockchainDevelopersMempool
+import nodeViewHolder.BDMempool
 import org.scalacheck.Gen
 import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
 import org.scalatest.{Matchers, PropSpec}
@@ -13,10 +13,10 @@ class BDMempoolTest extends PropSpec
   with GeneratorDrivenPropertyChecks
   with Matchers
   with CoreGenerators
-  with MempoolTransactionsTest[Sha256PreimageProposition, BDTransaction, BlockchainDevelopersMempool]
+  with MempoolTransactionsTest[Sha256PreimageProposition, BDTransaction, BDMempool]
   with Generators {
 
-  override val memPool: BlockchainDevelopersMempool = new BlockchainDevelopersMempool
+  override val memPool: BDMempool = new BDMempool
 
   override val transactionGenerator: Gen[BDTransaction] = BDTransactionGenerator
 
@@ -142,16 +142,16 @@ class BDMempoolTest extends PropSpec
   }
 
   property("mempool size should be limited") {
-    val txs: Seq[BDTransaction] = (0 until BlockchainDevelopersMempool.Limit)
+    val txs: Seq[BDTransaction] = (0 until BDMempool.Limit)
       .map(_ => transactionGenerator.sample.get)
-    var pool: BlockchainDevelopersMempool = txs.foldLeft(memPool) { (currentPool, tx) =>
+    var pool: BDMempool = txs.foldLeft(memPool) { (currentPool, tx) =>
       currentPool.put(tx).get
     }
-    pool.size shouldBe BlockchainDevelopersMempool.Limit
+    pool.size shouldBe BDMempool.Limit
 
     forAll(transactionGenerator) { tx =>
       pool = pool.put(tx).get
-      pool.size shouldBe BlockchainDevelopersMempool.Limit
+      pool.size shouldBe BDMempool.Limit
     }
   }
 

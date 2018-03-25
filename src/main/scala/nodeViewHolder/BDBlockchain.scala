@@ -89,6 +89,6 @@ object BDBlockchain {
     0: Byte,
     1517329800000L)
 
-  val Genesis: BDBlockchain = BDBlockchain(Map(1 -> GenesisBlock), Map(GenesisBlock.encodedId -> 1))
+  val empty: BDBlockchain = BDBlockchain(Map(1 -> GenesisBlock), Map(GenesisBlock.encodedId -> 1))
 
 }

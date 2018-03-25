@@ -45,3 +45,8 @@ case class BDWallet(seed: Array[Byte], secrets: Set[Sha256Preimage])
 
   override type NVCT = this.type
 }
+
+object BDWallet {
+  //TODO should read seed from config
+  val empty:BDWallet = BDWallet(Array.empty, Set.empty)
+}

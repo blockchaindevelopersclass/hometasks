@@ -1,12 +1,12 @@
 package transaction
 
-import com.google.common.primitives.{Bytes, Ints, Longs}
+import com.google.common.primitives.Bytes
 import io.circe.Json
 import org.msgpack.core.MessagePack
 import scorex.core.serialization.Serializer
 import scorex.core.transaction.Transaction
-import scorex.crypto.hash.Digest32
 import scorex.core.utils.concatBytes
+import scorex.crypto.hash.Digest32
 import supertagged.untag
 
 import scala.util.Try
@@ -14,13 +14,13 @@ import scala.util.Try
 case class BDTransaction(inputs: IndexedSeq[OutputId],
                          outputs: IndexedSeq[(Sha256PreimageProposition, Value)],
                          signatures: IndexedSeq[Sha256PreimageProof]
-                                          ) extends Transaction[Sha256PreimageProposition] {
+                        ) extends Transaction[Sha256PreimageProposition] {
   override type M = BDTransaction
 
   private def seqToBytes[A](sequence: IndexedSeq[A], mapping: A => Array[Byte]): Array[Byte] =
     if (sequence.nonEmpty) concatBytes(sequence.map(mapping)) else Array[Byte]()
 
-  override val messageToSign: Array[Byte] =   Bytes.concat(
+  override val messageToSign: Array[Byte] = Bytes.concat(
     seqToBytes[OutputId](
       inputs,
       i => untag(i)),

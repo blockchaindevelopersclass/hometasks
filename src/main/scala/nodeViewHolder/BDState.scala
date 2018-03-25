@@ -17,3 +17,9 @@ case class BDState(override val version: VersionTag) extends MinimalState[BDBloc
 
   override type NVCT = this.type
 }
+
+
+object BDState {
+
+  val empty: BDState = BDState(VersionTag @@ BDBlockchain.GenesisBlock.id)
+}

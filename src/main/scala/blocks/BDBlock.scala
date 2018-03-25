@@ -18,7 +18,7 @@ case class BDBlock(transactions: Seq[BDTransaction],
                    timestamp: Long) extends Block[Sha256PreimageProposition, BDTransaction] {
   override type M = BDBlock
 
-  override val modifierTypeId: ModifierTypeId = ModifierTypeId @@ 2.toByte
+  override val modifierTypeId: ModifierTypeId = BDBlock.ModifierTypeId
 
   val hash: Digest32 = ???
 
@@ -27,6 +27,12 @@ case class BDBlock(transactions: Seq[BDTransaction],
   override def json: Json = ???
 
   override def serializer: Serializer[BDBlock] = BDBlockSerializer
+}
+
+object BDBlock {
+
+  val ModifierTypeId: ModifierTypeId = ModifierTypeId @@ 10.toByte
+
 }
 
 object BDBlockSerializer extends Serializer[BDBlock] {
