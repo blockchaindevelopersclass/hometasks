@@ -7,7 +7,7 @@ import scorex.core.settings.ScorexSettings
 import scorex.core.transaction.Transaction
 import scorex.core.utils.NetworkTimeProvider
 import scorex.core.{ModifierTypeId, NodeViewHolder, NodeViewModifier}
-import transaction.{BCTransactionSerializer, BDTransaction, Sha256PreimageProposition}
+import transaction.{BDTransactionSerializer, BDTransaction, Sha256PreimageProposition}
 
 class BDNodeViewHolder(settings: ScorexSettings,
                        timeProvider: NetworkTimeProvider)
@@ -26,7 +26,7 @@ class BDNodeViewHolder(settings: ScorexSettings,
 
   override val modifierSerializers: Map[ModifierTypeId, Serializer[_ <: NodeViewModifier]] =
     Map(BDBlock.BDBlockModifierTypeId -> BDBlockSerializer,
-      Transaction.ModifierTypeId -> BCTransactionSerializer)
+      Transaction.ModifierTypeId -> BDTransactionSerializer)
 
   override val networkChunkSize: Int = settings.network.networkChunkSize
 }

@@ -32,12 +32,12 @@ case class BDTransaction(inputs: IndexedSeq[OutputId],
       s => s.serializer.toBytes(s))
   )
 
-  override def serializer: Serializer[BDTransaction] = BCTransactionSerializer
+  override def serializer: Serializer[BDTransaction] = BDTransactionSerializer
 
   override def json: Json = ???
 }
 
-object BCTransactionSerializer extends Serializer[BDTransaction] {
+object BDTransactionSerializer extends Serializer[BDTransaction] {
   override def toBytes(obj: BDTransaction): Array[Byte] = {
     val packer = MessagePack.newDefaultBufferPacker()
     packer.packArrayHeader(obj.inputs.size)
