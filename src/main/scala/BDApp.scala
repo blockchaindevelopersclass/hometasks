@@ -1,5 +1,7 @@
 import akka.actor.{ActorRef, Props}
 import blocks.BDBlock
+import mining.BDMiner.MineBlock
+import mining.BDMinerRef
 import nodeViewHolder._
 import scorex.core.api.http.{ApiRoute, NodeViewApiRoute, PeersApiRoute, UtilsApiRoute}
 import scorex.core.app.Application
@@ -33,6 +35,9 @@ class BDApp(args: Seq[String]) extends {
     NodeViewApiRoute[P, TX](settings.restApi, nodeViewHolderRef),
     PeersApiRoute(peerManagerRef, networkControllerRef, settings.restApi)
   )
+
+  val miner = BDMinerRef(nodeViewHolderRef, timeProvider)
+  miner ! MineBlock(0L)
 
 }
 

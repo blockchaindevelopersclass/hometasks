@@ -1,6 +1,6 @@
 package mining
 
-import akka.actor.{Actor, ActorRef}
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import blocks.BDBlock
 import mining.BDMiner.MineBlock
 import nodeViewHolder.BDBlockchain
@@ -8,6 +8,7 @@ import scorex.core.LocalInterface.LocallyGeneratedModifier
 import scorex.core.NodeViewHolder
 import scorex.core.NodeViewHolder.{SemanticallySuccessfulModifier, Subscribe}
 import scorex.core.utils.{NetworkTimeProvider, ScorexLogging}
+import scorex.crypto.encode.Base58
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -30,12 +31,12 @@ class BDMiner(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider) extend
 
     case MineBlock(newNonce) =>
       val newBlock = currentCandidate.copy(nonce = newNonce)
+      log.info(s"Trying nonce $newNonce for candidate with parent ${Base58.encode(newBlock.parentId)}")
       if (BDMiner.correctWorkDone(newBlock)) {
+        log.info(s"New block ${newBlock.encodedId} found")
         viewHolderRef ! LocallyGeneratedModifier(newBlock)
-        context.system.scheduler.scheduleOnce(1.second) {
-          self ! MineBlock(Random.nextLong())
-        }
-      } else {
+      }
+      context.system.scheduler.scheduleOnce(1.second) {
         self ! MineBlock(Random.nextLong())
       }
 
@@ -67,5 +68,15 @@ object BDMiner {
   }
 
   private def realDifficulty(block: BDBlock): BigInt = MaxTarget / BigInt(1, block.hash)
+
+}
+
+object BDMinerRef {
+  def props(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider): Props =
+    Props(new BDMiner(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider))
+
+  def apply(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider)
+           (implicit system: ActorSystem): ActorRef =
+    system.actorOf(props(viewHolderRef, timeProvider))
 
 }
