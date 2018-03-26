@@ -2,8 +2,7 @@ package transaction
 
 import org.scalatest.prop.{GeneratorDrivenPropertyChecks, PropertyChecks}
 import org.scalatest.{Matchers, PropSpec}
-import scorex.crypto.hash.Sha256
-import scorex.testkit.generators.CoreGenerators
+import utils.Generators
 
 class Sha256PreimageProofTest extends PropSpec
   with PropertyChecks

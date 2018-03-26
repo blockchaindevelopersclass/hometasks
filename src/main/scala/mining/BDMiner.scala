@@ -60,7 +60,7 @@ object BDMiner {
 
   case class MineBlock(nonce: Long)
 
-  val MaxTarget: BigInt = BigInt(1, Array.fill(32)((-1).toByte))
+  val MaxTarget: Long = Long.MaxValue
 
   def correctWorkDone(block: BDBlock): Boolean = {
     realDifficulty(block) <= block.currentTarget

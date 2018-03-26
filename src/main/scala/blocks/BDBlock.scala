@@ -5,14 +5,14 @@ import scorex.core.block.Block
 import scorex.core.block.Block.Version
 import scorex.core.serialization.Serializer
 import scorex.core.{ModifierId, ModifierTypeId}
-import scorex.crypto.hash.Digest32
+import scorex.crypto.hash.{Blake2b256, Digest32}
 import transaction.{BDTransaction, Sha256PreimageProposition}
 
 import scala.util.Try
 
 case class BDBlock(transactions: Seq[BDTransaction],
                    parentId: ModifierId,
-                   currentTarget: BigInt,
+                   currentTarget: Long,
                    nonce: Long,
                    version: Version,
                    timestamp: Long) extends Block[Sha256PreimageProposition, BDTransaction] {
@@ -20,7 +20,7 @@ case class BDBlock(transactions: Seq[BDTransaction],
 
   override val modifierTypeId: ModifierTypeId = BDBlock.BDBlockModifierTypeId
 
-  val hash: Digest32 = ???
+  val hash: Digest32 = Blake2b256(bytes)
 
   override val id: ModifierId = ModifierId @@ hash
 

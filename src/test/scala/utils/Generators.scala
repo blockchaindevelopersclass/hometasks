@@ -1,8 +1,12 @@
-package transaction
+package utils
 
-import org.scalacheck.Gen
+import blocks.BDBlock
+import org.scalacheck.{Arbitrary, Gen}
+import scorex.core.ModifierId
+import scorex.core.block.Block.Version
 import scorex.crypto.hash.Digest32
 import scorex.testkit.generators.CoreGenerators
+import transaction._
 
 trait Generators extends CoreGenerators {
 
@@ -23,5 +27,18 @@ trait Generators extends CoreGenerators {
     signatures <- Gen.listOfN(inputs.length, preimageProofGenerator)
   } yield BDTransaction(inputs.toIndexedSeq, outputs.toIndexedSeq, signatures.toIndexedSeq)
 
+  val BDBlockGenerator: Gen[BDBlock] = for {
+    parentId <- genBytesList(32).map(b => ModifierId @@ b)
+    transactions <- smallInt.flatMap(n => Gen.listOfN(n, BDTransactionGenerator))
+    currentTarget <- positiveLongGen
+    nonce <- positiveLongGen
+    timestamp <- positiveLongGen
+    version <- Arbitrary.arbitrary[Byte]
+  } yield BDBlock(transactions: Seq[BDTransaction],
+    parentId: ModifierId,
+    currentTarget: Long,
+    nonce: Long,
+    version: Version,
+    timestamp: Long)
 
 }

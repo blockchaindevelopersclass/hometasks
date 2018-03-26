@@ -7,6 +7,7 @@ import org.scalatest.{Matchers, PropSpec}
 import scorex.core.ModifierId
 import scorex.testkit.generators.CoreGenerators
 import scorex.testkit.properties.mempool.MempoolTransactionsTest
+import utils.Generators
 
 class BDMempoolTest extends PropSpec
   with PropertyChecks
