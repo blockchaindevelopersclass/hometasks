@@ -13,7 +13,7 @@ import transaction.{BDTransaction, Sha256PreimageProposition}
 import scala.language.postfixOps
 
 class BDApp(args: Seq[String]) extends {
-  override implicit val settings: ScorexSettings = ScorexSettings.read(None)
+  override implicit val settings: ScorexSettings = ScorexSettings.read(args.headOption)
 } with Application {
   override type P = Sha256PreimageProposition
   override type TX = BDTransaction
@@ -36,9 +36,10 @@ class BDApp(args: Seq[String]) extends {
     PeersApiRoute(peerManagerRef, networkControllerRef, settings.restApi)
   )
 
-  val miner = BDMinerRef(nodeViewHolderRef, timeProvider)
-  miner ! MineBlock(0L)
-
+  if (settings.network.nodeName.contains("mining-node")) {
+    val miner = BDMinerRef(nodeViewHolderRef, timeProvider)
+    miner ! MineBlock(0L)
+  }
 }
 
 

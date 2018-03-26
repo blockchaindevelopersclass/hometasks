@@ -31,12 +31,11 @@ class BDMiner(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider) extend
 
     case MineBlock(newNonce) =>
       val newBlock = currentCandidate.copy(nonce = newNonce)
-      log.info(s"Trying nonce $newNonce for candidate with parent ${Base58.encode(newBlock.parentId)}")
       if (BDMiner.correctWorkDone(newBlock)) {
         log.info(s"New block ${newBlock.encodedId} found")
         viewHolderRef ! LocallyGeneratedModifier(newBlock)
       }
-      context.system.scheduler.scheduleOnce(1.second) {
+      context.system.scheduler.scheduleOnce(10.second) {
         self ! MineBlock(Random.nextLong())
       }
 
