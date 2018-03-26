@@ -70,9 +70,9 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
         if (theirTotalHeight == ourHeight) {
           History.HistoryComparisonResult.Equal
         } else if (theirTotalHeight > ourHeight) {
-          History.HistoryComparisonResult.Younger
-        } else {
           History.HistoryComparisonResult.Older
+        } else {
+          History.HistoryComparisonResult.Younger
         }
       case _ => History.HistoryComparisonResult.Unknown
     }
