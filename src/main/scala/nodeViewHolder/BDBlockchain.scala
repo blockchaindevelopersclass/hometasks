@@ -26,7 +26,7 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
   override def children(blockId: ModifierId): Seq[BDBlock] = heightOf(blockId).map(_ + 1).flatMap(blockAt).toSeq
 
   // TODO this is simplified version
-  override def score(block: BDBlock): Score = heightOf(block).getOrElse(0L)
+  override def score(block: BDBlock): Score = BigInt(heightOf(block).getOrElse(0))
 
   override def chainScore(): Score = score(lastBlock)
 

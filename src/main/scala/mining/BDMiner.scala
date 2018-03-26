@@ -9,6 +9,7 @@ import scorex.core.NodeViewHolder
 import scorex.core.NodeViewHolder.{SemanticallySuccessfulModifier, Subscribe}
 import scorex.core.utils.{NetworkTimeProvider, ScorexLogging}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.math.BigInt
 import scala.util.Random

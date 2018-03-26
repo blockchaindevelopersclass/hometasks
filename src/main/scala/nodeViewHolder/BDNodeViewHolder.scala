@@ -25,14 +25,14 @@ class BDNodeViewHolder(settings: ScorexSettings,
     (BDBlockchain.empty, BDState.empty, BDWallet.empty, BDMempool.empty)
 
   override val modifierSerializers: Map[ModifierTypeId, Serializer[_ <: NodeViewModifier]] =
-    Map(BDBlock.ModifierTypeId -> BDBlockSerializer,
+    Map(BDBlock.BDBlockModifierTypeId -> BDBlockSerializer,
       Transaction.ModifierTypeId -> BCTransactionSerializer)
 
   override val networkChunkSize: Int = settings.network.networkChunkSize
 }
 
 
-object BDNodeViewHolder {
+object BDNodeViewHolderRef {
   def props(settings: ScorexSettings,
             timeProvider: NetworkTimeProvider): Props =
     Props(new BDNodeViewHolder(settings, timeProvider))

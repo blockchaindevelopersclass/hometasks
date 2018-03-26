@@ -18,7 +18,7 @@ case class BDBlock(transactions: Seq[BDTransaction],
                    timestamp: Long) extends Block[Sha256PreimageProposition, BDTransaction] {
   override type M = BDBlock
 
-  override val modifierTypeId: ModifierTypeId = BDBlock.ModifierTypeId
+  override val modifierTypeId: ModifierTypeId = BDBlock.BDBlockModifierTypeId
 
   val hash: Digest32 = ???
 
@@ -31,7 +31,7 @@ case class BDBlock(transactions: Seq[BDTransaction],
 
 object BDBlock {
 
-  val ModifierTypeId: ModifierTypeId = ModifierTypeId @@ 10.toByte
+  val BDBlockModifierTypeId: ModifierTypeId = ModifierTypeId @@ 10.toByte
 
 }
 
