@@ -19,6 +19,7 @@ val scorexVersion = "04b0b5be-SNAPSHOT"
 libraryDependencies ++= Seq(
   "org.scorexfoundation" %% "iodb" % "0.3.2",
   ("org.scorexfoundation" %% "scorex-core" % scorexVersion).exclude("ch.qos.logback", "logback-classic"),
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.scorexfoundation" %% "scorex-testkit" % scorexVersion % "test",
   "org.scalactic" %% "scalactic" % "3.0.+" % "test",
   "org.scalatest" %% "scalatest" % "3.0.+" % "test",

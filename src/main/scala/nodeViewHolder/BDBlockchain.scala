@@ -15,6 +15,8 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
                         reverseMap: Map[String, Int])
   extends BlockChain[Sha256PreimageProposition, BDTransaction, BDBlock, BDSyncInfo, BDBlockchain] {
 
+  log.info(s"Blockchain have height ${height()}")
+
   private def key(id: Array[Byte]): String = Base58.encode(id)
 
   override def height(): Int = blocks.keys.max

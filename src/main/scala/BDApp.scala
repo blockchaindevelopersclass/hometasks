@@ -1,7 +1,7 @@
 import akka.actor.{ActorRef, Props}
 import blocks.BDBlock
 import nodeViewHolder._
-import scorex.core.api.http.ApiRoute
+import scorex.core.api.http.{ApiRoute, NodeViewApiRoute, PeersApiRoute, UtilsApiRoute}
 import scorex.core.app.Application
 import scorex.core.network.NodeViewSynchronizer
 import scorex.core.network.message.MessageSpec
@@ -18,7 +18,6 @@ class BDApp(args: Seq[String]) extends {
   override type PMOD = BDBlock
   override type NVHT = BDNodeViewHolder
 
-  override val apiRoutes: Seq[ApiRoute] = Seq.empty
   override protected val additionalMessageSpecs: Seq[MessageSpec[_]] = Seq.empty
 
   override val nodeViewHolderRef: ActorRef = BDNodeViewHolderRef(settings, timeProvider)
@@ -27,9 +26,14 @@ class BDApp(args: Seq[String]) extends {
     actorSystem.actorOf(Props(new NodeViewSynchronizer[P, TX, BDSyncInfo, BDSyncInfoMessageSpec.type, PMOD, BDBlockchain, BDMempool](
       networkControllerRef, nodeViewHolderRef, localInterface, BDSyncInfoMessageSpec, settings.network, timeProvider)))
 
-
   override val localInterface: ActorRef = BDLocalInterfaceRef(nodeViewHolderRef)
   override val swaggerConfig: String = ""
+  override val apiRoutes: Seq[ApiRoute] = Seq(
+    UtilsApiRoute(settings.restApi),
+    NodeViewApiRoute[P, TX](settings.restApi, nodeViewHolderRef),
+    PeersApiRoute(peerManagerRef, networkControllerRef, settings.restApi)
+  )
+
 }
 
 
