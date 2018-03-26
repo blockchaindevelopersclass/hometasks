@@ -20,7 +20,7 @@ class BDApp(args: Seq[String]) extends {
   override type PMOD = BDBlock
   override type NVHT = BDNodeViewHolder
 
-  override protected val additionalMessageSpecs: Seq[MessageSpec[_]] = Seq.empty
+  override protected lazy val additionalMessageSpecs: Seq[MessageSpec[_]] = Seq(BDSyncInfoMessageSpec)
 
   override val nodeViewHolderRef: ActorRef = BDNodeViewHolderRef(settings, timeProvider)
 
