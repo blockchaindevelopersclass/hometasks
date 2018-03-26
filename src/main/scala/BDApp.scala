@@ -24,11 +24,12 @@ class BDApp(args: Seq[String]) extends {
 
   override val nodeViewHolderRef: ActorRef = BDNodeViewHolderRef(settings, timeProvider)
 
+  override val localInterface: ActorRef = BDLocalInterfaceRef(nodeViewHolderRef)
+
   override val nodeViewSynchronizer: ActorRef =
     actorSystem.actorOf(Props(new BDNodeViewSynchronizer(networkControllerRef, nodeViewHolderRef, localInterface,
       BDSyncInfoMessageSpec, settings.network, timeProvider)))
 
-  override val localInterface: ActorRef = BDLocalInterfaceRef(nodeViewHolderRef)
   override val swaggerConfig: String = ""
   override val apiRoutes: Seq[ApiRoute] = Seq(
     UtilsApiRoute(settings.restApi),
