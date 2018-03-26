@@ -6,7 +6,7 @@ import mining.BDMiner.MineBlock
 import nodeViewHolder.BDBlockchain
 import scorex.core.LocalInterface.LocallyGeneratedModifier
 import scorex.core.NodeViewHolder
-import scorex.core.NodeViewHolder.{SemanticallySuccessfulModifier, Subscribe}
+import scorex.core.NodeViewHolder.{ChangedMempool, SemanticallySuccessfulModifier, Subscribe}
 import scorex.core.utils.{NetworkTimeProvider, ScorexLogging}
 import scorex.crypto.encode.Base58
 
@@ -38,6 +38,9 @@ class BDMiner(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider) extend
       context.system.scheduler.scheduleOnce(10.second) {
         self ! MineBlock(Random.nextLong())
       }
+
+    case ChangedMempool(pool) =>
+      //TODO get and use it in candidate creation
 
     case m => log.warn(s"Unexpeted message $m")
   }
