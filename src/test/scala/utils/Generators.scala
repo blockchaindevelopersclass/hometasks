@@ -1,6 +1,7 @@
 package utils
 
 import blocks.BDBlock
+import nodeViewHolder.BDSyncInfo
 import org.scalacheck.{Arbitrary, Gen}
 import scorex.core.ModifierId
 import scorex.core.block.Block.Version
@@ -40,5 +41,9 @@ trait Generators extends CoreGenerators {
     nonce: Long,
     version: Version,
     timestamp: Long)
+
+  val BDSyncInfoGen: Gen[BDSyncInfo] = for {
+    ids <- Gen.nonEmptyListOf(genBytesList(32)).map(id => ModifierId @@ id)
+  } yield BDSyncInfo(ids)
 
 }

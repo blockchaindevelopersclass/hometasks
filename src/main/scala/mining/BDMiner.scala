@@ -39,7 +39,7 @@ class BDMiner(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider) extend
         self ! MineBlock(Random.nextLong())
       }
 
-    case _ => log.warn("Unexpeted message")
+    case m => log.warn(s"Unexpeted message $m")
   }
 
   private def constructNewBlock(parent: BDBlock): BDBlock = {
