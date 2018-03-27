@@ -10,7 +10,10 @@ import scorex.core.network.message.MessageSpec
 import scorex.core.settings.ScorexSettings
 import transaction.{BDTransaction, Sha256PreimageProposition}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.language.postfixOps
+import scala.util.Random
+import scala.concurrent.duration._
 
 class BDApp(args: Seq[String]) extends {
   override implicit val settings: ScorexSettings = ScorexSettings.read(args.headOption)
@@ -39,7 +42,9 @@ class BDApp(args: Seq[String]) extends {
 
   if (settings.network.nodeName.contains("mining-node")) {
     val miner = BDMinerRef(nodeViewHolderRef, timeProvider)
-    miner ! MineBlock(0L)
+    actorSystem.scheduler.scheduleOnce(10.second) {
+      miner ! MineBlock(Random.nextLong())
+    }
   }
 }
 
