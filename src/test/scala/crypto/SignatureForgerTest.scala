@@ -11,7 +11,7 @@ class SignatureForgerTest extends PropSpec
   with Matchers
   with CoreGenerators {
 
-  property("should be able to forge signature") {
+  ignore("should be able to forge signature") {
     forAll(nonEmptyBytesGen) { data =>
       val pair = Curve25519.createKeyPair(data)
       val correctSignature = Curve25519.sign(pair._1, data)
