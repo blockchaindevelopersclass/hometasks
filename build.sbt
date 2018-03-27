@@ -3,7 +3,7 @@ import sbt._
 
 organization := "com.binarydistrict"
 
-name := "blockchain developers"
+name := "hometasks"
 
 version := "0.1.0"
 
@@ -19,9 +19,11 @@ val scorexVersion = "04b0b5be-SNAPSHOT"
 libraryDependencies ++= Seq(
   "org.scorexfoundation" %% "iodb" % "0.3.2",
   ("org.scorexfoundation" %% "scorex-core" % scorexVersion).exclude("ch.qos.logback", "logback-classic"),
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.scorexfoundation" %% "scorex-testkit" % scorexVersion % "test",
   "org.scalactic" %% "scalactic" % "3.0.+" % "test",
   "org.scalatest" %% "scalatest" % "3.0.+" % "test",
+  "org.msgpack" %% "msgpack-scala" % "0.8.13",
   "org.scalacheck" %% "scalacheck" % "1.13.+" % "test"
 )
 
