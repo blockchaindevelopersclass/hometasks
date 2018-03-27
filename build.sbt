@@ -28,6 +28,7 @@ libraryDependencies ++= Seq(
 )
 
 mainClass in assembly := Some("BDApp")
+mainClass in run := Some("BDApp")
 
 fork := true
 
