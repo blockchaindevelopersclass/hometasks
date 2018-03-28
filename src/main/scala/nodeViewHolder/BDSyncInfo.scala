@@ -12,7 +12,7 @@ import scala.util.Try
 case class BDSyncInfo(ids: Seq[ModifierId]) extends SyncInfo {
   override type M = BDSyncInfo
 
-  override val startingPoints: ModifierIds = Seq((BDBlock.BDBlockModifierTypeId, ids.last))
+  override val startingPoints: ModifierIds = Seq((BDBlock.BDBlockModifierTypeId, ids.head))
 
   override def serializer: Serializer[BDSyncInfo] = BDSyncInfoSerializer
 }
