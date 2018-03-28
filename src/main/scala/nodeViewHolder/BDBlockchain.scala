@@ -12,7 +12,7 @@ import transaction.{BDTransaction, Sha256PreimageProposition}
 import scala.util.Try
 
 case class BDBlockchain(blocks: Map[Int, BDBlock],
-                        reverseMap: Map[String, Int])
+                        reverseMap: Map[String, Int], isValid: Map [BDBlock, Boolean])
   extends BlockChain[Sha256PreimageProposition, BDTransaction, BDBlock, BDSyncInfo, BDBlockchain] {
 
   log.info(s"Blockchain have height ${height()}")
@@ -38,14 +38,14 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
     if (!(lastBlock.id sameElements block.parentId)) throw new Error(s"Incorrect parentId for ${block.encodedId}")
     val blockHeight = height() + 1
     val progressInfo = ProgressInfo(None, Seq.empty, Some(block), Seq.empty)
-    (BDBlockchain(blocks + (blockHeight -> block), reverseMap + (block.encodedId -> blockHeight)), progressInfo)
+    (BDBlockchain(blocks + (blockHeight -> block), reverseMap + (block.encodedId -> blockHeight),isValid), progressInfo)
   }
 
   override def reportSemanticValidity(modifier: BDBlock,
                                       valid: Boolean,
                                       lastApplied: ModifierId): (BDBlockchain, History.ProgressInfo[BDBlock]) = {
-    // TODO not supported in this test implementation
-    (this, ProgressInfo[BDBlock](None, Seq.empty, None, Seq.empty))
+    if(valid) (BDBlockchain(blocks,reverseMap,isValid + (modifier -> true)), ProgressInfo[BDBlock](None, Seq.empty, None, Seq.empty))
+    else (BDBlockchain(blocks - reverseMap(modifier.encodedId),reverseMap - modifier.encodedId,isValid + (modifier -> false)), ProgressInfo[BDBlock](None, Seq.empty, None, Seq.empty))
   }
 
   override def modifierById(id: ModifierId): Option[BDBlock] = reverseMap.get(key(id)).flatMap(h => blocks.get(h))
@@ -91,6 +91,6 @@ object BDBlockchain {
     0: Byte,
     1517329800000L)
 
-  val empty: BDBlockchain = BDBlockchain(Map(1 -> GenesisBlock), Map(GenesisBlock.encodedId -> 1))
+  val empty: BDBlockchain = BDBlockchain(Map(1 -> GenesisBlock), Map(GenesisBlock.encodedId -> 1),Map(GenesisBlock -> true))
 
 }

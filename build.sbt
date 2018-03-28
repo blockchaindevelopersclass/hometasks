@@ -58,3 +58,11 @@ homepage := Some(url("https://binarydistrict.com/ru/courses/blockchain-developer
 
 licenses := Seq("CC0" -> url("https://creativecommons.org/publicdomain/zero/1.0/legalcode"))
 
+mainClass in assembly := Some("BDApp")
+
+assemblyMergeStrategy in assembly := {
+  case "logback.xml" => MergeStrategy.first
+  case "module-info.class" => MergeStrategy.discard
+  case  PathList("org", "scalatools", "testing", xs @ _*) => MergeStrategy.first
+  case other => (assemblyMergeStrategy in assembly).value(other)
+}
