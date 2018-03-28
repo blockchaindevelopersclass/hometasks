@@ -35,8 +35,8 @@ class BDMiner(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider) extend
         log.info(s"New block ${newBlock.encodedId} found")
         viewHolderRef ! LocallyGeneratedModifier(newBlock)
       }
-      context.system.scheduler.scheduleOnce(10.second) {
-        self ! MineBlock(Random.nextLong())
+      context.system.scheduler.scheduleOnce(10.seconds) {
+        self ! MineBlock(newNonce + 1)
       }
 
     case ChangedMempool(pool) =>

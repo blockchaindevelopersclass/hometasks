@@ -12,10 +12,8 @@ import transaction.{BDTransaction, Sha256PreimageProposition}
 import scala.util.Try
 
 case class BDBlockchain(blocks: Map[Int, BDBlock],
-                        reverseMap: Map[String, Int], isValid: Map [BDBlock, Boolean])
+                        reverseMap: Map[String, Int], isValid: Map[BDBlock, Boolean])
   extends BlockChain[Sha256PreimageProposition, BDTransaction, BDBlock, BDSyncInfo, BDBlockchain] {
-
-  log.info(s"Blockchain have height ${height()}")
 
   private def key(id: Array[Byte]): String = Base58.encode(id)
 
@@ -38,14 +36,15 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
     if (!(lastBlock.id sameElements block.parentId)) throw new Error(s"Incorrect parentId for ${block.encodedId}")
     val blockHeight = height() + 1
     val progressInfo = ProgressInfo(None, Seq.empty, Some(block), Seq.empty)
-    (BDBlockchain(blocks + (blockHeight -> block), reverseMap + (block.encodedId -> blockHeight),isValid), progressInfo)
+    log.info(s"Appended block ${block.encodedId} with height ${blockHeight}")
+    (BDBlockchain(blocks + (blockHeight -> block), reverseMap + (block.encodedId -> blockHeight), isValid), progressInfo)
   }
 
   override def reportSemanticValidity(modifier: BDBlock,
                                       valid: Boolean,
                                       lastApplied: ModifierId): (BDBlockchain, History.ProgressInfo[BDBlock]) = {
-    if(valid) (BDBlockchain(blocks,reverseMap,isValid + (modifier -> true)), ProgressInfo[BDBlock](None, Seq.empty, None, Seq.empty))
-    else (BDBlockchain(blocks - reverseMap(modifier.encodedId),reverseMap - modifier.encodedId,isValid + (modifier -> false)), ProgressInfo[BDBlock](None, Seq.empty, None, Seq.empty))
+    if (valid) (BDBlockchain(blocks, reverseMap, isValid + (modifier -> true)), ProgressInfo[BDBlock](None, Seq.empty, None, Seq.empty))
+    else (BDBlockchain(blocks - reverseMap(modifier.encodedId), reverseMap - modifier.encodedId, isValid + (modifier -> false)), ProgressInfo[BDBlock](None, Seq.empty, None, Seq.empty))
   }
 
   override def modifierById(id: ModifierId): Option[BDBlock] = reverseMap.get(key(id)).flatMap(h => blocks.get(h))
@@ -60,9 +59,8 @@ case class BDBlockchain(blocks: Map[Int, BDBlock],
   }
 
   override def compare(other: BDSyncInfo): History.HistoryComparisonResult.Value = {
-    val ourIds = lastBlockIds(BDSyncInfo.idsSize)
     val theirIds = other.ids
-    ourIds.reverse.find(id => theirIds.exists(_ sameElements id)) match {
+    theirIds.reverse.find(id => contains(id)) match {
       case Some(common) =>
         val commonHeight = heightOf(common).get
         val theirTotalHeight = theirIds.indexWhere(_ sameElements common) + commonHeight
@@ -91,6 +89,6 @@ object BDBlockchain {
     0: Byte,
     1517329800000L)
 
-  val empty: BDBlockchain = BDBlockchain(Map(1 -> GenesisBlock), Map(GenesisBlock.encodedId -> 1),Map(GenesisBlock -> true))
+  val empty: BDBlockchain = BDBlockchain(Map(1 -> GenesisBlock), Map(GenesisBlock.encodedId -> 1), Map(GenesisBlock -> true))
 
 }

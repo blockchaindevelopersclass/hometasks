@@ -43,7 +43,7 @@ class BDApp(args: Seq[String]) extends {
   if (settings.network.nodeName.contains("mining-node")) {
     val miner = BDMinerRef(nodeViewHolderRef, timeProvider)
     actorSystem.scheduler.scheduleOnce(10.second) {
-      miner ! MineBlock(Random.nextLong())
+      miner ! MineBlock(0)
     }
   }
 }
