@@ -35,7 +35,7 @@ class BDMiner(viewHolderRef: ActorRef, timeProvider: NetworkTimeProvider) extend
         log.info(s"New block ${newBlock.encodedId} found")
         viewHolderRef ! LocallyGeneratedModifier(newBlock)
       }
-      context.system.scheduler.scheduleOnce(10.seconds) {
+      context.system.scheduler.scheduleOnce(1.minute) {
         self ! MineBlock(newNonce + 1)
       }
 
